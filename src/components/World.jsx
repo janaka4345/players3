@@ -5,14 +5,15 @@ import Plane from "./Plane";
 import Player from "./Player";
 import { useKeyboard } from "./useKeyboard";
 import { useMouseCapture } from "./useMouseCapture";
+import Terrain from "./Terrain";
 function getInput(keyboard, mouse) {
   // console.log("y");
   let [x, y, z] = [0, 0, 0];
-  if (keyboard["s"]) z += 1.0;
-  if (keyboard["w"]) z -= 1.0;
-  if (keyboard["d"]) x += 1.0;
-  if (keyboard["a"]) x -= 1.0;
-  if (keyboard[" "]) y += 1.0;
+  if (keyboard["s"]) z += 0.5;
+  if (keyboard["w"]) z -= 0.5;
+  if (keyboard["d"]) x += 0.5;
+  if (keyboard["a"]) x -= 0.5;
+  if (keyboard[" "]) y += 0.5;
 
   return {
     move: [x, y, z],
@@ -22,7 +23,7 @@ function getInput(keyboard, mouse) {
 }
 export default function World() {
   const keyboard = useKeyboard();
-  const mouse = useMouseCapture();
+  // const mouse = useMouseCapture();
 
   return (
     <>
@@ -30,9 +31,10 @@ export default function World() {
       <axesHelper args={[2]} />
       <color attach="background" args={["#000000"]} />
       <Lights />
-      <Physics>
-        <Plane />
-        <Player walk={5} jump={5} input={() => getInput(keyboard, mouse)} />
+      <Physics debug>
+        {/* <Plane /> */}
+        <Terrain />
+        <Player walk={2} jump={2} input={() => getInput(keyboard, [0, 0])} />
       </Physics>
     </>
   );

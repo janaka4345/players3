@@ -60,7 +60,7 @@ export default function Player({
     const { move, look, running } = input();
     const moveVec = { x: move[0], y: move[1], z: move[2] };
     // console.log(api.current);
-    updateOrientation(look);
+    // updateOrientation(look);
     // // not ideal to filter here on every frame
     // const walkable = scene.children.filter(
     //   (o) => o.children[0]?.uuid !== mesh?.current?.uuid,
@@ -72,18 +72,18 @@ export default function Player({
     offset
       .fromArray(move)
       .normalize()
-      .multiply(running ? speed.clone().multiplyScalar(2.5) : speed)
-      .applyQuaternion(yaw);
+      .multiply(running ? speed.clone().multiplyScalar(2.5) : speed);
+    // .applyQuaternion(yaw);
     // .applyQuaternion(getSlope(ground));
     const v = velocity.multiply(drag).add(moveVec);
     // const v = velocity.add(offset);
     api.current.setLinvel(v, true);
     // }
-    camera.position.lerp(
-      position.add(cameraOffset.clone().applyQuaternion(yaw)),
-      0.25,
-    );
-    camera.quaternion.copy(gaze);
+    // camera.position.lerp(
+    //   position.add(cameraOffset.clone().applyQuaternion(yaw)),
+    //   0.25,
+    // );
+    // camera.quaternion.copy(gaze);
     // console.log(offset.fromArray(move));
     // console.log(vec3(0, 0, 0));
   });
@@ -96,6 +96,7 @@ export default function Player({
       position={[0, 20, 0]}
       friction={0}
       restitution={0}
+      scale={0.2}
     >
       <mesh ref={mesh} userData={{ tag: "player" }}>
         <meshStandardMaterial transparent opacity={1} />
