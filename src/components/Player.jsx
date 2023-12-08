@@ -59,9 +59,10 @@ export default function Player({
     const velocity = vec3(api.current.linvel());
     const position = vec3(api.current.translation());
     const { move, look, running } = input();
-    const moveVec = { x: move[0], y: move[1], z: move[2] };
+    // const moveVec = { x: move[0], y: move[1], z: move[2] };
     // console.log(api.current);
     updateOrientation(look);
+    // console.log(yaw);
     // // not ideal to filter here on every frame
     // const walkable = scene.children.filter(
     //   (o) => o.children[0]?.uuid !== mesh?.current?.uuid,
@@ -76,9 +77,10 @@ export default function Player({
       .multiply(running ? speed.clone().multiplyScalar(2.5) : speed)
       .applyQuaternion(yaw);
     // .applyQuaternion(getSlope(ground));
-    const v = velocity.multiply(drag).add(moveVec);
+    const v = velocity.multiply(drag).add(offset);
     // const v = velocity.add(offset);
     api.current.setLinvel(v, true);
+    mesh.current.setRotationFromQuaternion(yaw);
     // }
     camera.position.lerp(
       position.add(cameraOffset.clone().applyQuaternion(yaw)),
@@ -86,7 +88,8 @@ export default function Player({
     );
     camera.quaternion.copy(gaze);
     // console.log(offset.fromArray(move));
-    // console.log(vec3(0, 0, 0));
+    // console.log(new Vector3(5, 10, 2).normalize());
+    // console.log(mesh.current);
   });
 
   return (
@@ -94,17 +97,19 @@ export default function Player({
       ref={api}
       colliders={false}
       lockRotations
-      position={[0, 20, 0]}
+      position={[0, 2, 0]}
       friction={0}
       restitution={0}
       scale={0.5}
     >
       {/* <mesh ref={mesh} userData={{ tag: "player" }}>
         <meshStandardMaterial transparent opacity={1} />
-        <capsuleGeometry />
+        <boxGeometry args={[1, 1, 1]} />
       </mesh> */}
-      <Soldier ref={mesh} position={[0, -0.5, 0]} />
-      <CapsuleCollider args={[0.4, 0.6]} />
+      <group ref={mesh}>
+        <Soldier position={[0, -1, 0]} />
+        <CapsuleCollider args={[0.5, 0.5]} />
+      </group>
     </RigidBody>
   );
 }

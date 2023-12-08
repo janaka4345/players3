@@ -9,11 +9,11 @@ import Terrain from "./Terrain";
 function getInput(keyboard, mouse) {
   // console.log("y");
   let [x, y, z] = [0, 0, 0];
-  if (keyboard["s"]) z += 0.5;
-  if (keyboard["w"]) z -= 0.5;
-  if (keyboard["d"]) x += 0.5;
-  if (keyboard["a"]) x -= 0.5;
-  if (keyboard[" "]) y += 0.5;
+  if (keyboard["s"]) z += 0.2;
+  if (keyboard["w"]) z -= 0.2;
+  if (keyboard["d"]) x += 0.2;
+  if (keyboard["a"]) x -= 0.2;
+  if (keyboard[" "]) y += 0.2;
 
   return {
     move: [x, y, z],
@@ -34,7 +34,7 @@ export default function World() {
       <Physics debug>
         {/* <Plane /> */}
         <Terrain />
-        <Player walk={2} jump={2} input={() => getInput(keyboard, mouse)} />
+        <Player walk={0.2} jump={0.2} input={() => getInput(keyboard, mouse)} />
       </Physics>
     </>
   );
