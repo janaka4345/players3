@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { PlaneGeometry } from "three";
 
 export default function Terrain(params) {
+  console.log("terrain rendred");
   const texture = useTexture("./Heightmap.png");
   const heightFieldHeight = 10;
   const heightFieldWidth = 10;

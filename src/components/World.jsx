@@ -23,7 +23,7 @@ function getInput(keyboard, mouse) {
 }
 export default function World() {
   const keyboard = useKeyboard();
-  // const mouse = useMouseCapture();
+  const mouse = useMouseCapture();
 
   return (
     <>
@@ -34,7 +34,7 @@ export default function World() {
       <Physics debug>
         {/* <Plane /> */}
         <Terrain />
-        <Player walk={2} jump={2} input={() => getInput(keyboard, [0, 0])} />
+        <Player walk={2} jump={2} input={() => getInput(keyboard, mouse)} />
       </Physics>
     </>
   );

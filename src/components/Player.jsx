@@ -1,16 +1,17 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import { RigidBody, vec3 } from "@react-three/rapier";
+import { CapsuleCollider, RigidBody, vec3 } from "@react-three/rapier";
 import { useRef } from "react";
 import { Raycaster, Quaternion, Vector3 } from "three";
 import quaternionFromNormal from "three-quaternion-from-normal";
 import { clamp, lerp } from "three/src/math/MathUtils";
+import Soldier from "./Soldier";
 
 export default function Player({
   walk = 3,
   jump = 4,
   input = () => ({ move: [0, 0, 0], look: [0, 0] }),
 }) {
-  console.log("renderd");
+  console.log("player renderd");
   const api = useRef(null);
   const mesh = useRef();
   const { scene, camera } = useThree();
@@ -25,11 +26,11 @@ export default function Player({
   const yaw = new Quaternion();
   const pitch = new Quaternion();
   const cameraOffset = new Vector3(0, 3, 5);
-  // const down = new Vector3(0, -1, 0);
+  const down = new Vector3(0, -1, 0);
   const yAxis = new Vector3(0, 1, 0);
   const xAxis = new Vector3(1, 0, 0);
-  // const raycaster = new Raycaster(new Vector3(0, 0, 0), down, 0, 2);
-  // const slope = new Vector3(0, 1, 0);
+  const raycaster = new Raycaster(new Vector3(0, 0, 0), down, 0, 2);
+  const slope = new Vector3(0, 1, 0);
   const drag = new Vector3(0.85, 1, 0.85);
 
   const updateOrientation = ([x, y]) => {
@@ -60,7 +61,7 @@ export default function Player({
     const { move, look, running } = input();
     const moveVec = { x: move[0], y: move[1], z: move[2] };
     // console.log(api.current);
-    // updateOrientation(look);
+    updateOrientation(look);
     // // not ideal to filter here on every frame
     // const walkable = scene.children.filter(
     //   (o) => o.children[0]?.uuid !== mesh?.current?.uuid,
@@ -72,18 +73,18 @@ export default function Player({
     offset
       .fromArray(move)
       .normalize()
-      .multiply(running ? speed.clone().multiplyScalar(2.5) : speed);
-    // .applyQuaternion(yaw);
+      .multiply(running ? speed.clone().multiplyScalar(2.5) : speed)
+      .applyQuaternion(yaw);
     // .applyQuaternion(getSlope(ground));
     const v = velocity.multiply(drag).add(moveVec);
     // const v = velocity.add(offset);
     api.current.setLinvel(v, true);
     // }
-    // camera.position.lerp(
-    //   position.add(cameraOffset.clone().applyQuaternion(yaw)),
-    //   0.25,
-    // );
-    // camera.quaternion.copy(gaze);
+    camera.position.lerp(
+      position.add(cameraOffset.clone().applyQuaternion(yaw)),
+      0.25,
+    );
+    camera.quaternion.copy(gaze);
     // console.log(offset.fromArray(move));
     // console.log(vec3(0, 0, 0));
   });
@@ -91,17 +92,19 @@ export default function Player({
   return (
     <RigidBody
       ref={api}
-      colliders="hull"
+      colliders={false}
       lockRotations
       position={[0, 20, 0]}
       friction={0}
       restitution={0}
-      scale={0.2}
+      scale={0.5}
     >
-      <mesh ref={mesh} userData={{ tag: "player" }}>
+      {/* <mesh ref={mesh} userData={{ tag: "player" }}>
         <meshStandardMaterial transparent opacity={1} />
         <capsuleGeometry />
-      </mesh>
+      </mesh> */}
+      <Soldier ref={mesh} position={[0, -0.5, 0]} />
+      <CapsuleCollider args={[0.4, 0.6]} />
     </RigidBody>
   );
 }
