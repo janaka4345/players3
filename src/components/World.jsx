@@ -1,6 +1,8 @@
 import { OrbitControls } from "@react-three/drei";
 import Lights from "./Lights";
 import { Physics } from "@react-three/rapier";
+import Plane from "./Plane";
+import Player from "./Player";
 
 export default function World() {
   return (
@@ -8,8 +10,10 @@ export default function World() {
       <OrbitControls makeDefault />
       <axesHelper args={[2]} />
       <color attach="background" args={["#000000"]} />
+      <Lights />
       <Physics>
-        <Lights />
+        <Plane />
+        <Player />
       </Physics>
     </>
   );
